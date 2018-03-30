@@ -43,10 +43,13 @@ public class TextOverlay {
     });
     private final Paint paint = new Paint();
     private final TextGenerator textGenerator;
+    private final float padding;
 
     private int textureId;
     private int width;
     private int height;
+
+    private float x,y;
 
     public TextOverlay(Context context, TextGenerator textGenerator) {
         this.textGenerator = textGenerator;
@@ -61,6 +64,7 @@ public class TextOverlay {
 
         paint.setColor(Color.WHITE);
         paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14f, context.getResources().getDisplayMetrics()));
+        padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, context.getResources().getDisplayMetrics());
     }
 
     public void setDimensions(int width, int height) {
@@ -81,7 +85,13 @@ public class TextOverlay {
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        canvas.drawText(text, width / 2.0f, height / 1.1f, paint);
+
+        if (x == 0 && y == 0) {
+            float textLength = paint.measureText(text);
+            x = (width - (int) textLength) >> 1;
+            y = height * .9f;
+        }
+        canvas.drawText(text, x, y, paint);
 
         glBindTexture(GL_TEXTURE_2D, textureId);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
