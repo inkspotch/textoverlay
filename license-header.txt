@@ -15,8 +15,3 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ch.inkspot.textoverlay.internal;
-
-public class Constants {
-    static final int BYTES_PER_FLOAT = 4;
-}
